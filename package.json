@@ -1,0 +1,21 @@
+{
+  "name": "emptracksql",
+  "version": "1.0.0",
+  "description": "A command-line application which manages a company's employee database, using Node.js, Inquirer, and MySQL",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "EmpTrackSQL"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "inquirer": "^8.2.4",
+    "mysql2": "^2.2.5"
+  }
+}
