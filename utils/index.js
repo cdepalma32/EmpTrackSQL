@@ -1,4 +1,5 @@
-const connection = require('./connection');
+const database = require('./connection');
+const util = require('util');
 
 class DBOperations {
     constructor(database) {
@@ -6,30 +7,43 @@ class DBOperations {
             throw new Error('Databse connection is not provided.'); // handles if undefined
         }
         this.database = database;
+        // Promisify the query method for async/await usage
+        this.query = util.promisify(database.query).bind(database);
     }
 
     async viewAllDepartments() {
         try {
             //database query to retrieve all departments
-            const departments = await this.database.query('SELECT id, name FROM department');
-            return departments.rows;
+            const departments = await this.query('SELECT id, name FROM department');
+            return departments;
         } catch (error) {
             throw new Error(`Error retrieving departments: ${error.message}`);
         }
         // return `SELECT id, name FROM department`;
     }
 
-    viewAllRoles() {
-        return `SELECT id, title, department_id, salary FROM role`;
+    async viewAllRoles() {
+            // database query to retrieve all roles
+            const query = `SELECT * FROM role`;
+            try {
+                const roles = await this.query(query);
+                return roles;
+        } catch (error) {
+            throw new Error (`Error retrieving employees: ${error.message}`);
+        }
     }
 
-    viewAllEmployees() {
-        return `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager
-                FROM employee e
-                LEFT JOIN role r ON e.role_id = r.id
-                LEFT JOIN department d ON r.department_id = d.id
-                LEFT JOIN employee m ON e.manager_id = m.id`;
+    async viewAllEmployees() {
+        const query = `SELECT * FROM employee`;
+        try {
+            const employees = await this.query(query);
+            return employees;
+        } catch (error) {
+            throw new Error(`Error retrieving employees: ${error.message}`);
+        }
     }
+
+    
 
     addDepartment(name) {
         return `INSERT INTO department (name) VALUES ('${name}')`;
@@ -46,8 +60,8 @@ class DBOperations {
     updateEmployeeRole(employeeId, roleId) {
         return `UPDATE employee SET role_id = ${roleId} WHERE id = ${employeeId}`;
     }
-
-    // Add more query functions for other operations as needed
 }
+    // Add more query functions for other operations as needed
+
 
 module.exports = DBOperations;

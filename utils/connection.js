@@ -1,21 +1,22 @@
 const express = require('express');
 const mysql = require('mysql2');
 
+// Environment variables for database configuration
+const DB_HOST = process.env.DB_HOST || 'localhost';
+const DB_USER = process.env.DB_USER || 'root';
+const DB_PASSWORD = process.env.DB_PASSWORD || 'root';
+const DB_NAME = process.env.DB_NAME || 'workspace_db';
 const PORT = process.env.PORT || 3001;
+
 const app = express();
 
 // Create a connection to the MySQL database
-const databaseConfig = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'root',
-  database: 'workspace_db'
-},
-
-);
-
-// Create and export the database connection
-const connection = mysql.createConnection(databaseConfig);
+const connection = mysql.createConnection({
+  host: DB_HOST,
+  user: DB_USER,
+  password: DB_PASSWORD,
+  database: DB_NAME
+});
 
 // Connect to the database
 connection.connect(err => {
@@ -26,10 +27,12 @@ connection.connect(err => {
   console.log('Connected to the workspace_db database.');
 });
 
-// Set up your routes and middleware here
+// Here you can set up your routes and middleware
+// Example: app.get('/', (req, res) => res.send('Hello World!'));
 
 // Start the Express server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`\nServer is running on port ${PORT}`);
 });
+
 module.exports = connection;

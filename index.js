@@ -1,5 +1,6 @@
 const inquirer = require("inquirer"); // to get user input
 const DBOperations = require("./utils");
+const database = require("./utils/connection"); // Import the database connection
 
 // Define menu options for user selection
 const menuOptions = [
@@ -17,49 +18,75 @@ async function init() {
     let answers = await inquirer.prompt(menuOptions);
     console.log(answers.options);
 
+    // Create a new instance of DBOperations with the database connection
+    const dbOperations = new DBOperations(database);
+
     // switch statement to handle user options
+
+
        switch (answers.options) {
+        
+        // View All Employees
         case "View All Employees":
             console.log("Selected View All Employees");
-            break;
-        case "Add Employee":
+            try {
+                const employees = await dbOperations.viewAllEmployees();
+                if (employees.length > 0) {
+                    console.log("/n");
+                    console.table(employees);
+                } else {
+                    console.log("No employees found.");
+                }
+            } catch (error) {
+                console.error("An error occurred while retrieving employees:", error);
+            }
+                break;
+
+        case "Add Roles":
             console.log("Selected Add Employee");
             break;
         case "Update Employee Role":
             console.log("Selected Update Employee Role");
             break;
+
+            // View all Roles Case
         case "View All Roles":
             console.log("Selected View All Roles");
-            break;  
-        case "Add Role":
+            try {
+                const roles = await dbOperations.viewAllRoles();
+                if (roles.length > 0) {
+                    console.log("/n");
+                    console.table(roles);
+                } else {
+                    console.log("No roles found.");
+                }
+            } catch (error) {
+                console.error("An error occurred while retrieving roles:", error);
+            }
+                break;  
+
+
+                // Add Roles Case
+            case "Add Role":
             console.log("Selected Add Role");
             break;
 
-            // View All Departments Case
-        case "View All Departments":
+           // View All Departments Case
+           case "View All Departments":
             console.log("Selected View All Departments");
-            viewDepartments(); // calls the function to view all departments
             try {
-                // defines asynchronous function to retrieve and display all departments
-                const viewAllDepartments = async () => {
-                    // Retrieves all departments from the database using DBOperations module
-                    const departments = await new DBOperations().viewAllDepartments(); // creates new instance of DBOperations class & calls viewAllDepartments method
-                    // Check if departments were retrieved successfully
-                    if (departments.length > 0) {
-                        console.log("\n");
-                        console.table(departments); // Display the departments in a formatted table using console.table
-                    } else {
-                        console.log("No departments found.");
-                    }
-                };
-    
-                await viewAllDepartments(); // Call the function to retrieve and display all departments
+                // Retrieve and display all departments using the DBOperations instance
+                const departments = await dbOperations.viewAllDepartments();
+                if (departments.length > 0) {
+                    console.log("\n");
+                    console.table(departments);
+                } else {
+                    console.log("No departments found.");
+                }
             } catch (error) {
-                console.error("An error occurred while retrieving departments:", error); // Logs errors
+                console.error("An error occurred while retrieving departments:", error);
             }
             break;
-
-
 
         case "Add Department":
             console.log("Selected Add Department");
@@ -73,16 +100,5 @@ async function init() {
     }
 }
 
-async function viewDepartments() {
-    try{
-        const dbOperations = new DBOperations(); // Create a new instance of DBOperations
-        const departments = await dbOperations.viewAllDepartments(); // Call viewAllDepartments on the instance
-        console.table(departments); // Display the departments in a formatted table
-    } catch (error){
-
-        console.error("An error occurred while retrieving departments:", error);
-    }
-
-}
 // Initialize the program by calling the init function
 init();
