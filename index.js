@@ -83,6 +83,18 @@ const addEmployeeOptions = [
         message: "What is the employee's manager Id?"
     }
 ];
+const updateEmployeeOptions = [
+    {
+        type: "input",
+        name: "id",
+        message: "What is the employee's Id?"
+    },
+    {
+        type: "input",
+        name: "role_id",
+        message: "What is the employee's role Id?"
+    },
+];
 
 async function addDepartmentQuestion(dbOperations) {
     try {
@@ -117,6 +129,16 @@ async function addEmployeeQuestion(dbOperations) {
     }
 }
 
+async function updateEmployeeRole(dbOperations) {
+    try {
+        let employeeAnswer = await inquirer.prompt(updateEmployeeOptions); 
+        const { id, role_id } = employeeAnswer;
+        const updateEmployeeResult = await dbOperations.updateEmployeeRole(id, role_id)
+        console.log("Employee updated successfuly", updateEmployeeResult);
+    } catch (err) {
+        console.error(err);
+    }
+}
 
 
 async function init() {
@@ -145,7 +167,12 @@ async function init() {
                 console.log("Add Employee");
                 addEmployeeQuestion(dbOperations);
                 break;
-
+            
+            case "Update Employee Role":
+                console.log("Update Employee");
+                updateEmployeeRole(dbOperations);
+                break;
+                
             case "View All Roles":
                 console.log("Selected View All Roles");
                 try {
