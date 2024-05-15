@@ -16,7 +16,7 @@ INSERT INTO role (id, title, salary, department_id) VALUES
 (6, 'Budget Analyst', 84000.00, 3),
 (7, 'Legal Supervisor', 84000.00, 4),
 (8, 'Immigration Lawyer', 77000.00, 4),
-(9, 'Personal Assistant', NULL, 5),
+(9, 'Personal Assistant', 56000, 5),
 (10, 'Tech Support Representative', 47000.00, 5);
 
 -- Ensure that employees are inserted in the correct order
