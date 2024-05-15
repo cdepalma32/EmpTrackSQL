@@ -13,7 +13,16 @@ class DBOperations {
 
     async viewAllDepartments() {
         try {
-            const departments = await this.query('SELECT id, name FROM department');
+            const query = `
+            SELECT
+                d.id AS Department_Id,
+                d.name AS Department_Name
+            FROM
+                department d;
+                
+            
+            `;
+            const departments = await this.query(query);
             return departments;
         } catch (error) {
             throw new Error(`Error retrieving departments: ${error.message}`);
@@ -22,7 +31,19 @@ class DBOperations {
 
     async viewAllRoles() {
         try {
-            const roles = await this.query('SELECT * FROM role');
+            const query = `
+                SELECT
+                    r.id AS Role_Id,
+                    r.title AS Role_title,
+                    r.salary AS Salary,
+                    d.name AS Department_name
+                FROM 
+                    role r
+                LEFT JOIN
+                    department d ON r.department_id = d.id;
+
+            `;
+            const roles = await this.query(query);
             return roles;
         } catch (error) {
             throw new Error(`Error retrieving roles: ${error.message}`);
@@ -34,16 +55,23 @@ class DBOperations {
             const query = `
                 SELECT 
                     e.id AS EmployeeID,
-                    e.first_name AS EmployeeFirstName,
-                    e.last_name AS EmployeeLastName,
-                    e.role_id AS RoleID,
-                    m.first_name AS ManagerFirstName,
-                    m.last_name AS ManagerLastName
+                    e.first_name AS Employee_First_Name,
+                    e.last_name AS Employee_Last_Name,
+                    m.first_name AS Manager_First_Name,
+                    m.last_name AS Manager_Last_Name,
+                    r.title AS Job_Title,
+                    r.salary AS Role_Salary,
+                    d.name AS Department_Name
                 FROM 
                     employee e
                 LEFT JOIN 
-                    employee m ON e.manager_id = m.id;
+                    employee m ON e.manager_id = m.id
+                    LEFT JOIN
+                    role r ON e.role_id = r.id
+                    LEFT JOIN
+                    department d ON r.department_id = d.id;
             `;
+
             const employees = await this.query(query);
             return employees;
         } catch (error) {
