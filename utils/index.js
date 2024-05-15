@@ -31,12 +31,26 @@ class DBOperations {
 
     async viewAllEmployees() {
         try {
-            const employees = await this.query('SELECT * FROM employee');
+            const query = `
+                SELECT 
+                    e.id AS EmployeeID,
+                    e.first_name AS EmployeeFirstName,
+                    e.last_name AS EmployeeLastName,
+                    e.role_id AS RoleID,
+                    m.first_name AS ManagerFirstName,
+                    m.last_name AS ManagerLastName
+                FROM 
+                    employee e
+                LEFT JOIN 
+                    employee m ON e.manager_id = m.id;
+            `;
+            const employees = await this.query(query);
             return employees;
         } catch (error) {
             throw new Error(`Error retrieving employees: ${error.message}`);
         }
     }
+    
 
     async addDepartment(departmentId, departmentName) {
         const query = "INSERT INTO department (id, name) VALUES (?, ?)";
