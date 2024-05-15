@@ -72,10 +72,10 @@ class DBOperations {
         }
     }
 
-    async addEmployee(firstName, lastName, roleId, managerId) {
-        const query = "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)";
+    async addEmployee(id, firstName, lastName, roleId, managerId) {
+        const query = "INSERT INTO employee (id, first_name, last_name, role_id, manager_id) VALUES (?,?, ?, ?, ?)";
         try {
-            const result = await this.query(query, [firstName, lastName, roleId, managerId]);
+            const result = await this.query(query, [id, firstName, lastName, roleId, managerId]);
             return result;
         } catch (error) {
             throw new Error(`Error adding employee: ${error.message}`);

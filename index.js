@@ -56,6 +56,34 @@ const addRoleOptions = [
     }
 ];
 
+const addEmployeeOptions = [
+    {
+        type: "input",
+        name: "id",
+        message: "What is the employee's Id?"
+    },
+    {
+        type: "input",
+        name: "first_name",
+        message: "What is the employee's first name?"
+    },
+    {
+        type: "input",
+        name: "last_name",
+        message: "What is the employee's last name?"
+    },
+    {
+        type: "input",
+        name: "role_id",
+        message: "What is the employee's role Id?"
+    },
+    {
+        type: "input",
+        name: "manager_id",
+        message: "What is the employee's manager Id?"
+    }
+];
+
 async function addDepartmentQuestion(dbOperations) {
     try {
         let deptAnswer = await inquirer.prompt(addDepartmentOptions);
@@ -77,6 +105,19 @@ async function addRoleQuestion(dbOperations) {
         console.error(err);
     }
 }
+
+async function addEmployeeQuestion(dbOperations) {
+    try {
+        let employeeAnswer = await inquirer.prompt(addEmployeeOptions); 
+        const { id, first_name, last_name, role_id, manager_id } = employeeAnswer;
+        const addEmployeeResult = await dbOperations.addEmployee(id, first_name, last_name, role_id, manager_id)
+        console.log("Employee added successfuly", addEmployeeResult);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+
 
 async function init() {
     try {
@@ -100,12 +141,9 @@ async function init() {
                 }
                 break;
 
-            case "Add Roles":
-                console.log("Selected Add Employee");
-                break;
-
-            case "Update Employee Role":
-                console.log("Selected Update Employee Role");
+            case "Add Employee":
+                console.log("Add Employee");
+                addEmployeeQuestion(dbOperations);
                 break;
 
             case "View All Roles":
