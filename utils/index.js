@@ -4,7 +4,7 @@ const util = require('util');
 class DBOperations {
     constructor(database) {
         if (!database) {
-            throw new Error('Databse connection is not provided.'); // handles if undefined
+            throw new Error('Database connection is not provided.'); // handles if undefined
         }
         this.database = database;
         // Promisify the query method for async/await usage
@@ -13,54 +13,72 @@ class DBOperations {
 
     async viewAllDepartments() {
         try {
-            //database query to retrieve all departments
             const departments = await this.query('SELECT id, name FROM department');
             return departments;
         } catch (error) {
             throw new Error(`Error retrieving departments: ${error.message}`);
         }
-        // return `SELECT id, name FROM department`;
     }
 
     async viewAllRoles() {
-            // database query to retrieve all roles
-            const query = `SELECT * FROM role`;
-            try {
-                const roles = await this.query(query);
-                return roles;
+        try {
+            const roles = await this.query('SELECT * FROM role');
+            return roles;
         } catch (error) {
-            throw new Error (`Error retrieving employees: ${error.message}`);
+            throw new Error(`Error retrieving roles: ${error.message}`);
         }
     }
 
     async viewAllEmployees() {
-        const query = `SELECT * FROM employee`;
         try {
-            const employees = await this.query(query);
+            const employees = await this.query('SELECT * FROM employee');
             return employees;
         } catch (error) {
             throw new Error(`Error retrieving employees: ${error.message}`);
         }
     }
 
-    
-
-    addDepartment(name) {
-        return `INSERT INTO department (name) VALUES ('${name}')`;
+    async addDepartment(departmentId, departmentName) {
+        const query = "INSERT INTO department (id, name) VALUES (?, ?)";
+        try {
+            const result = await this.query(query, [departmentId, departmentName]);
+            return result;
+        } catch (error) {
+            throw new Error(`Error adding department: ${error.message}`);
+        }
     }
 
-    addRole(title, salary, departmentId) {
-        return `INSERT INTO role (title, salary, department_id) VALUES ('${title}', ${salary}, ${departmentId})`;
+    async addRole(id, title, salary, departmentId) {
+        const query = "INSERT INTO role (id, title, salary, department_id) VALUES (?, ?, ?, ?)";
+        try {
+            const result = await this.query(query, [id, title, salary, departmentId]);
+            return result;
+        } catch (error) {
+            throw new Error(`Error adding role: ${error.message}`);
+        }
     }
 
-    addEmployee(firstName, lastName, roleId, managerId) {
-        return `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${firstName}', '${lastName}', ${roleId}, ${managerId})`;
+    async addEmployee(firstName, lastName, roleId, managerId) {
+        const query = "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)";
+        try {
+            const result = await this.query(query, [firstName, lastName, roleId, managerId]);
+            return result;
+        } catch (error) {
+            throw new Error(`Error adding employee: ${error.message}`);
+        }
     }
 
-    updateEmployeeRole(employeeId, roleId) {
-        return `UPDATE employee SET role_id = ${roleId} WHERE id = ${employeeId}`;
+    async updateEmployeeRole(employeeId, roleId) {
+        const query = "UPDATE employee SET role_id = ? WHERE id = ?";
+        try {
+            const result = await this.query(query, [roleId, employeeId]);
+            return result;
+        } catch (error) {
+            throw new Error(`Error updating employee role: ${error.message}`);
+        }
     }
 }
+
     // Add more query functions for other operations as needed
 
 

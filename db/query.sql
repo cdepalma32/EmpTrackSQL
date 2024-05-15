@@ -1,17 +1,27 @@
-
 /* Selecting first and last name of employees, role, salary, department and manager's first name */
-SELECT employees.first_name, employees.last_name AS employee, roles.title AS role, roles.salary, departments.name AS department, managers.first_name AS manager
-FROM employees
+SELECT 
+  e.first_name, 
+  e.last_name AS employee, 
+  r.title AS role, 
+  r.salary, 
+  d.name AS department, 
+  m.first_name AS manager
+FROM 
+  employee e
 
-/* Joining employees table with roles table based on role_id */
-LEFT JOIN roles ON employees.role_id = roles.id
+/* Joining employee table with role table based on role_id */
+LEFT JOIN 
+  role r ON e.role_id = r.id
 
-/* Joining roles table with department table baesd on department_id */
-LEFT JOIN departments ON roles.department_id = departments.id
+/* Joining role table with department table based on department_id */
+LEFT JOIN 
+  department d ON r.department_id = d.id
 
-/* Joining employees table with itself (managers) based on manager_id */
-LEFT JOIN employees AS managers ON employees.manager_id = managers.id
+/* Joining employee table with itself (managers) based on manager_id */
+LEFT JOIN 
+  employee m ON e.manager_id = m.id
 
 /* Orders the result by the last name of the employees, first name employees*/
-ORDER BY employees.last_name, employees.first_name;
-
+ORDER BY 
+  e.last_name, 
+  e.first_name;
