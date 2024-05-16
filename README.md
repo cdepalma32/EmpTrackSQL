@@ -5,7 +5,7 @@ A command-line application which manages a company's employee database, using No
   ![Screenshot](./img/empSnip.PNG)
 
   ## Links to video
-  [![Watch the video](https://youtu.be/bDy5vKpaask)](https://youtu.be/bDy5vKpaask)
+  [![Watch the video](https://youtu.be/dpuzcm6Am5U)](https://youtu.be/dpuzcm6Am5U)
 
 
   ## Description
